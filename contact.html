@@ -85,7 +85,7 @@
 
     // Copy email button
     document.getElementById('copyMail').addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText('hello@example.com'); toast('Copied!'); }catch{ alert('hello@example.com'); }
+      try{ await navigator.clipboard.writeText('hireready.store@proton.me'); toast('Copied!'); }catch{ alert('hireready.store@proton.me'); }
     });
 
     // Minimal mailto composer
@@ -94,7 +94,7 @@
       const n=encodeURIComponent(document.getElementById('name').value.trim());
       const em=encodeURIComponent(document.getElementById('email').value.trim());
       const m=encodeURIComponent(document.getElementById('message').value.trim());
-      const to='hello@example.com';
+      const to='hireready.store@proton.me';
       const subject='Message from Daily Tools';
       const body=`Name: ${n}%0AEmail: ${em}%0A%0A${m}`;
       location.href=`mailto:${to}?subject=${subject}&body=${body}`;
