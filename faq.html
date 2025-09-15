@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark">
+  <title>FAQ — Daily Tools</title>
+  <meta name="description" content="FAQ for Daily Tools: offline, currency rates, privacy, sharing, install as app, languages, export, and more." />
+  <link rel="canonical" href="/faq" />
+  <meta name="robots" content="index,follow" />
+  <link rel="stylesheet" href="app.css">
+
+  <!-- OG / Twitter -->
+  <meta property="og:title" content="FAQ — Daily Tools" />
+  <meta property="og:description" content="Frequently asked questions about the Daily Tools web app." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%23ffffff' width='100%25' height='100%25'/%3E%3Ccircle cx='120' cy='120' r='80' fill='%23D4AF37'/%3E%3Ctext x='220' y='150' font-family='Arial' font-weight='700' font-size='64'%3EDaily Tools%3C/text%3E%3C/svg%3E" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="bar">
+        <div class="brand">
+          <div class="badge">DT</div>
+          <div class="title">Daily Tools</div>
+        </div>
+        <a class="btn" href="/index.html">↩ Open the app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h1>FAQ</h1>
+        <p class="muted">Quick answers to the most common questions.</p>
+
+        <details open>
+          <summary>Does it work offline?</summary>
+          <p>Yes. Daily Tools is a PWA. The app shell and pages are cached so you can use the converter (units), calculator, to-do, and shopping list offline. Currency needs the internet to refresh rates, but the last rates are cached for a while.</p>
+        </details>
+
+        <details>
+          <summary>How are currency rates updated?</summary>
+          <p>When you switch to the Currency tab or tap “Refresh”, the app fetches fresh rates from public APIs. If you’re offline, it uses the last cached rates and shows an updated time. You can refresh manually anytime.</p>
+        </details>
+
+        <details>
+          <summary>Where is my data stored?</summary>
+          <p>Locally on your device in your browser’s <em>LocalStorage</em> (to-do list, shopping list, calculator history, language, and cached FX rates). We don’t run accounts or servers that store your personal data.</p>
+        </details>
+
+        <details>
+          <summary>How do I share my list or tasks?</summary>
+          <p>Use the “Share (read-only)” button in Shopping or To-Do. The app generates a <em>read-only</em> link you can send to others. Depending on your setup it’s either an encoded URL or a short code via a serverless function. Recipients can view only.</p>
+        </details>
+
+        <details>
+          <summary>Can I export my shopping list?</summary>
+          <p>Yes. Tap “Export CSV” in the Shopping tab to download a CSV file with name, quantity, price, and totals.</p>
+        </details>
+
+        <details>
+          <summary>How do I install it as an app?</summary>
+          <p>On mobile Chrome/Edge: menu → “Add to Home screen”. On Safari iOS: share icon → “Add to Home Screen”. On desktop Chrome/Edge: address bar install icon or menu → “Install app”.</p>
+        </details>
+
+        <details>
+          <summary>How do I change the language?</summary>
+          <p>Use the Language selector in the header. Supported now: English, Français, العربية, Deutsch. Your choice is saved on this device.</p>
+        </details>
+
+        <details>
+          <summary>Is there dark mode?</summary>
+          <p>Not yet. The current version ships with a light theme optimized for readability. Dark mode may come later.</p>
+        </details>
+
+        <details>
+          <summary>I’m seeing old currency rates. What can I do?</summary>
+          <p>Make sure you’re online, then tap “Refresh” in the Currency converter. If it still doesn’t update, your network or the public API may be temporarily unavailable—try again later.</p>
+        </details>
+
+        <details>
+          <summary>Which browsers are supported?</summary>
+          <p>Recent versions of Chrome, Edge, Safari, and Firefox on mobile and desktop. Very old browsers may not support PWA or some APIs.</p>
+        </details>
+
+        <details>
+          <summary>How do I erase all my app data?</summary>
+          <p>Open the <a href="/privacy">Privacy</a> page and use “Clear app data (local)”, or clear LocalStorage for the site from your browser settings.</p>
+        </details>
+
+        <details>
+          <summary>How can I contact you?</summary>
+          <p>Email us at <a href="mailto:hello@example.com">hello@example.com</a>, or use the quick form on the <a href="/contact">Contact</a> page.</p>
+        </details>
+      </section>
+    </main>
+        <!-- Unified footer -->
+    <footer class="site-footer">
+      <div class="app">
+        <div class="footer-row">
+          <a class="btn btn-ghost" href="index.html">↩ Open the app</a>
+          <nav class="footer-links" aria-label="Info pages">
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="faq.html">FAQ</a>
+            <a href="how-it-works.html">How it works</a>
+          </nav>
+        </div>
+        <div class="copyright">© <span id="y"></span> Daily Tools</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+        // Year in footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark">
+  <title>How it works — Daily Tools</title>
+  <meta name="description" content="How to use Daily Tools: converter (units + live currency), calculator with history, to-do, shopping list, sharing, install as PWA, and offline." />
+  <link rel="canonical" href="/how-it-works" />
+  <meta name="robots" content="index,follow" />
+  <link rel="stylesheet" href="app.css">
+
+  <!-- OG / Twitter -->
+  <meta property="og:title" content="How it works — Daily Tools" />
+  <meta property="og:description" content="Learn how to use the Daily Tools web app step by step." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%23ffffff' width='100%25' height='100%25'/%3E%3Ccircle cx='120' cy='120' r='80' fill='%23D4AF37'/%3E%3Ctext x='220' y='150' font-family='Arial' font-weight='700' font-size='64'%3EDaily Tools%3C/text%3E%3C/svg%3E" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="bar">
+        <div class="brand">
+          <div class="badge">DT</div>
+          <div class="title">Daily Tools</div>
+        </div>
+        <a class="btn" href="/index.html">↩ Open the app</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h1>How it works</h1>
+        <p class="muted">Everything you need to know to get the most out of Daily Tools.</p>
+
+        <div class="toc">
+          <strong>Contents:</strong>
+          <ul>
+            <li><a href="#start">1. Quick start</a></li>
+            <li><a href="#converter">2. Converter (units & currency)</a></li>
+            <li><a href="#calculator">3. Calculator & history</a></li>
+            <li><a href="#todo">4. To-Do & sharing</a></li>
+            <li><a href="#shopping">5. Shopping list, budget & CSV</a></li>
+            <li><a href="#install">6. Install as app (PWA)</a></li>
+            <li><a href="#offline">7. Offline & data</a></li>
+          </ul>
+        </div>
+
+        <h2 id="start">1. Quick start</h2>
+        <div class="grid">
+          <div class="step">
+            <strong>Pick a tab:</strong> Converter, Calculator, To-Do, or Shopping.
+          </div>
+          <div class="step">
+            <strong>Language:</strong> change from the header. Your choice is saved.
+          </div>
+        </div>
+
+        <h2 id="converter">2. Converter (units & currency)</h2>
+        <ul>
+          <li>Choose a <strong>Category</strong>: Length, Mass, Temperature, or Currency.</li>
+          <li>Enter a value, pick <em>From</em> and <em>To</em> units, then click <strong>Convert</strong>.</li>
+          <li>Use the ⇄ button to swap units.</li>
+          <li><strong>Currency:</strong> tap <em>Refresh</em> to fetch live rates. If offline, the app uses cached rates and shows when they were updated.</li>
+        </ul>
+
+        <h2 id="calculator">3. Calculator & history</h2>
+        <ul>
+          <li>Click buttons or use your keyboard: digits, <code>+ − × ÷ %</code>, <code>Enter</code> (=), <code>Backspace</code> (DEL), <code>Esc</code> (AC), <code>.</code> for decimal.</li>
+          <li>Results are saved in <strong>History</strong>. Click a history line to reuse its result.</li>
+          <li><em>Clear history</em> removes previous calculations from this device.</li>
+        </ul>
+
+        <h2 id="todo">4. To-Do & sharing</h2>
+        <ul>
+          <li>Add tasks, then filter by <em>All / Active / Done</em>.</li>
+          <li>Use <strong>Share (read-only)</strong> to generate a link others can view. They can’t edit your tasks.</li>
+          <li>Short link mode uses an optional serverless function; otherwise the data is encoded in the URL.</li>
+        </ul>
+
+        <h2 id="shopping">5. Shopping list, budget & CSV</h2>
+        <ul>
+          <li>Add <strong>Item</strong>, <strong>Qty</strong>, and <strong>Price</strong>. Totals calculate automatically.</li>
+          <li>Set a <strong>Budget</strong> to see how much is left (green) or exceeded (red).</li>
+          <li>Share read-only like To-Do, or <strong>Export CSV</strong> for spreadsheets.</li>
+        </ul>
+
+        <h2 id="install">6. Install as app (PWA)</h2>
+        <ul>
+          <li><strong>Android (Chrome/Edge):</strong> menu → <em>Add to Home screen</em>.</li>
+          <li><strong>iOS (Safari):</strong> share icon → <em>Add to Home Screen</em>.</li>
+          <li><strong>Desktop (Chrome/Edge):</strong> install icon in the address bar, أو من القائمة → <em>Install app</em>.</li>
+        </ul>
+        <p class="note">Once installed, the app opens fullscreen and works offline.</p>
+
+        <h2 id="offline">7. Offline & data</h2>
+        <ul>
+          <li>The app shell and pages are cached so you can use tools offline.</li>
+          <li>Your lists, language, calculator history, and cached FX rates are stored locally (LocalStorage).</li>
+          <li>To clear data or export it, visit the <a href="/privacy">Privacy</a> page.</li>
+        </ul>
+      </section>
+
+    </main>
+        <!-- Unified footer -->
+    <footer class="site-footer">
+      <div class="app">
+        <div class="footer-row">
+          <a class="btn btn-ghost" href="index.html">↩ Open the app</a>
+          <nav class="footer-links" aria-label="Info pages">
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="faq.html">FAQ</a>
+            <a href="how-it-works.html">How it works</a>
+          </nav>
+        </div>
+        <div class="copyright">© <span id="y"></span> Daily Tools</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+        // Year in footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

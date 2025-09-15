@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark">
+  <title>Daily Tools</title>
+  <meta name="description" content="Daily Tools — converters (units + live currency), calculator with history, to-do & shopping list. PWA, offline-ready." />
+  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:title" content="Daily Tools" />
+  <meta property="og:description" content="Mobile-first tools: converter (units + FX), calculator, to-do, shopping list." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect fill='%23ffffff' width='100%25' height='100%25'/%3E%3Ccircle cx='120' cy='120' r='80' fill='%23D4AF37'/%3E%3Ctext x='220' y='150' font-family='Arial' font-weight='700' font-size='64'%3EDaily Tools%3C/text%3E%3C/svg%3E" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="app.css">
+
+</head>
+<body>
+  <div class="app">
+<header class="appbar" role="banner">
+  <div class="appbar-inner">
+    <div class="brand">
+      <div class="badge">DT</div>
+      <div class="title" data-i18n="appName">Daily Tools</div>
+    </div>
+
+    <!-- language + theme -->
+    <div class="lang">
+      <span class="pill" data-i18n="lang">Language</span>
+      <select id="langSelect" class="select" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="ar">AR</option>
+        <option value="de">DE</option>
+      </select>
+    </div>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Primary">
+    <button class="tab-btn" data-tab="convert" aria-selected="true" role="tab"><span data-i18n="tab_convert">Converter</span></button>
+    <button class="tab-btn" data-tab="calc" role="tab"><span data-i18n="tab_calc">Calculator</span></button>
+    <button class="tab-btn" data-tab="todo" role="tab"><span data-i18n="tab_todo">To-Do</span></button>
+    <button class="tab-btn" data-tab="shop" role="tab"><span data-i18n="tab_shop">Shopping</span></button>
+    <button class="tab-btn" data-tab="more" role="tab"><span data-i18n="tab_more">More</span></button>
+  </nav>
+</header>
+
+    <main id="spaRoot">
+      <!-- Converter -->
+      <section id="convert" class="card" role="tabpanel">
+        <h2 data-i18n="convert_title">Converter</h2>
+        <div class="row" style="margin-bottom:8px">
+          <div class="col">
+            <label class="chip" for="convCat" data-i18n="convert_category">Category</label>
+            <select id="convCat">
+              <option value="length" selected data-i18n-opt="cat_length">Length</option>
+              <option value="mass" data-i18n-opt="cat_mass">Mass</option>
+              <option value="temp" data-i18n-opt="cat_temp">Temperature</option>
+              <option value="fx" data-i18n-opt="cat_fx">Currency</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" id="convRow">
+          <div class="col"><input id="convFromVal" type="number" inputmode="decimal" placeholder="1.00" aria-label="Value" /></div>
+          <div class="col"><select id="convFromUnit"></select></div>
+          <div class="col"><select id="convToUnit"></select></div>
+          <div class="col" style="display:flex; gap:8px; align-items:center;">
+            <button id="swapUnits" class="btn" title="Swap">⇄</button>
+            <button id="doConvert" class="btn btn-primary" data-i18n="convert_btn">Convert</button>
+          </div>
+        </div>
+        <div style="margin-top:10px; display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+          <div class="stat" id="convResult">—</div>
+          <button id="copyResult" class="btn btn-ghost" data-i18n="copy">Copy</button>
+          <button id="refreshFx" class="btn btn-ghost" style="display:none" title="Refresh rates">⟳</button>
+          <span id="fxStamp" class="muted" style="display:none"></span>
+        </div>
+        <p id="fxNote" class="muted" style="margin-top:8px; display:none" data-i18n="fx_note">Fetching live currency rates…</p>
+      </section>
+
+      <!-- Calculator -->
+      <section id="calc" class="card" role="tabpanel" hidden>
+        <h2 data-i18n="calc_title">Calculator</h2>
+        <div class="calc-wrap" aria-label="Calculator">
+          <div id="calcDisplay" class="calc-display" title="Click to copy">0</div>
+          <button class="calc-btn op" data-k="AC">AC</button>
+          <button class="calc-btn op" data-k="DEL">DEL</button>
+          <button class="calc-btn op" data-k="%">%</button>
+          <button class="calc-btn op" data-k="÷">÷</button>
+          <button class="calc-btn" data-k="7">7</button><button class="calc-btn" data-k="8">8</button><button class="calc-btn" data-k="9">9</button><button class="calc-btn op" data-k="×">×</button>
+          <button class="calc-btn" data-k="4">4</button><button class="calc-btn" data-k="5">5</button><button class="calc-btn" data-k="6">6</button><button class="calc-btn op" data-k="−">−</button>
+          <button class="calc-btn" data-k="1">1</button><button class="calc-btn" data-k="2">2</button><button class="calc-btn" data-k="3">3</button><button class="calc-btn op" data-k="+">+</button>
+          <button class="calc-btn" data-k="+/−">+/−</button><button class="calc-btn" data-k="0">0</button><button class="calc-btn" data-k=".">.</button><button class="calc-btn eq" data-k="=">=</button>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <strong data-i18n="history">History</strong>
+            <button id="clearHist" class="btn btn-danger" data-i18n="clear_history">Clear history</button>
+          </div>
+          <div id="histList" class="list" style="margin-top:8px"></div>
+        </div>
+      </section>
+
+      <!-- To-Do (share read-only) -->
+      <section id="todo" class="card" role="tabpanel" hidden>
+        <h2 data-i18n="todo_title">To-Do</h2>
+
+        <div id="todoBanner" class="item" style="display:none">
+          <span class="grow" data-i18n="share_readonly_note">This is a read-only shared view.</span>
+          <span class="chip">🔒</span>
+        </div>
+
+        <div class="row" id="todoForm" style="margin-bottom:10px;">
+          <div class="col"><input id="todoInput" type="text" placeholder="Add a task…" aria-label="New task" /></div>
+          <button id="addTodo" class="btn btn-primary" data-i18n="todo_add">Add</button>
+        </div>
+
+        <div class="chips" id="todoFilters" style="margin-bottom:8px;">
+          <button class="chip-btn" data-fil="all" aria-pressed="true">All</button>
+          <button class="chip-btn" data-fil="active" aria-pressed="false">Active</button>
+          <button class="chip-btn" data-fil="done" aria-pressed="false">Done</button>
+          <span class="muted" id="todoCount"></span>
+        </div>
+
+        <div class="list" id="todoList" aria-live="polite"></div>
+
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+          <button id="shareTodo" class="btn" data-i18n="share_list">Share (read-only)</button>
+          <button id="shareTodoShort" class="btn btn-ghost">Short link</button>
+          <button id="clearDone" class="btn" data-i18n="todo_clear_done">Clear done</button>
+          <button id="clearAll" class="btn" data-i18n="todo_clear_all">Clear all</button>
+        </div>
+
+        <p class="muted" style="margin-top:10px;" data-i18n="todo_hint">Tasks are saved on this device.</p>
+      </section>
+
+      <!-- Shopping -->
+      <section id="shop" class="card" role="tabpanel" hidden>
+        <h2 data-i18n="shop_title">Shopping List</h2>
+        <div id="shareBanner" class="item" style="display:none">
+          <span class="grow" data-i18n="share_readonly_note">This is a read-only shared view.</span>
+          <span class="chip">🔒</span>
+        </div>
+        <div id="shopForm" class="row" style="margin-bottom:8px;">
+          <div class="col"><input id="itemName" type="text" placeholder="Item" /></div>
+          <div class="col"><input id="itemQty" type="number" inputmode="decimal" placeholder="Qty" /></div>
+          <div class="col"><input id="itemPrice" type="number" inputmode="decimal" placeholder="Price" /></div>
+          <button id="addItem" class="btn btn-primary" data-i18n="add_item">Add</button>
+        </div>
+        <div class="list" id="shopList"></div>
+        <div class="summary">
+          <div class="stat"><span data-i18n="items">Items</span>: <strong id="sCount">0</strong></div>
+          <div class="stat"><span data-i18n="total">Total</span>: <strong id="sTotal">0.00</strong></div>
+          <div class="stat">
+            <span data-i18n="budget">Budget</span>:
+            <input id="budgetInput" type="number" inputmode="decimal" placeholder="0.00" style="width:110px; margin-left:6px" />
+          </div>
+          <div class="stat"><span data-i18n="left">Left</span>: <strong id="sLeft" class="ok">0.00</strong></div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+          <button id="shareBtn" class="btn" data-i18n="share_list">Share (read-only)</button>
+          <button id="shareShortBtn" class="btn btn-ghost">Short link</button>
+          <button id="clearShop" class="btn btn-danger" data-i18n="clear_all">Clear all</button>
+          <button id="exportCSV" class="btn btn-ghost" data-i18n="export_csv">Export CSV</button>
+        </div>
+      </section>
+
+      <!-- More -->
+      <section id="more" class="card" role="tabpanel" hidden>
+<h2 data-i18n="more_title">Info & SEO</h2>
+<ul class="list" style="list-style:none; padding:0;">
+  <li class="item"><a class="grow" href="/about.html"   data-i18n="page_about">About</a></li>
+  <li class="item"><a class="grow" href="/contact.html" data-i18n="page_contact">Contact</a></li>
+  <li class="item"><a class="grow" href="/privacy.html" data-i18n="page_privacy">Privacy</a></li>
+  <li class="item"><a class="grow" href="/terms.html"   data-i18n="page_terms">Terms</a></li>
+  <li class="item"><a class="grow" href="/faq.html"     data-i18n="page_faq">FAQ</a></li>
+  <li class="item"><a class="grow" href="/how-it-works.html" data-i18n="page_how">How it works</a></li>
+</ul>
+      </section>
+
+      <!-- SEO Page / shared view -->
+      <section id="page" class="card" role="region" hidden></section>
+    </main>
+
+    <footer>© <span id="year"></span> Daily Tools</footer>
+  </div>
+
+  <script>
+    const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+    const num=v=>Number.parseFloat(v), fmt=v=>Number.isFinite(v)?(Math.round((v+Number.EPSILON)*100)/100).toFixed(2):'—';
+    const copy=async(text)=>{ try{ await navigator.clipboard.writeText(text); toast(msg('copied')); }catch(e){ alert(text); } };
+    function toast(text){ const n=document.createElement('div'); n.textContent=text; Object.assign(n.style,{position:'fixed',left:'50%',bottom:'28px',transform:'translateX(-50%)',background:'#111',color:'#fff',padding:'10px 14px',borderRadius:'14px',zIndex:99,boxShadow:'0 6px 18px rgba(0,0,0,.2)'}); document.body.appendChild(n); setTimeout(()=>n.remove(),1200); }
+    $('#year').textContent = new Date().getFullYear();
+
+    const tabs=$$('.tab-btn');
+    const panels={ convert:$('#convert'), calc:$('#calc'), todo:$('#todo'), shop:$('#shop'), more:$('#more') };
+    function showTab(id){
+      tabs.forEach(b=>b.setAttribute('aria-selected','false'));
+      const btn=[...tabs].find(b=>b.dataset.tab===id); if(btn) btn.setAttribute('aria-selected','true');
+      Object.entries(panels).forEach(([k,el])=> el.hidden = (k!==id) );
+      $('#page').hidden = true;
+    }
+    tabs.forEach(btn=> btn.addEventListener('click', ()=> showTab(btn.dataset.tab) ));
+
+    // i18n
+    const t = {
+      en:{ appName:"Daily Tools", lang:"Language",
+        tab_convert:"Converter", tab_calc:"Calculator", tab_todo:"To-Do", tab_shop:"Shopping", tab_more:"More",
+        convert_title:"Converter", convert_category:"Category", convert_btn:"Convert", copy:"Copy",
+        cat_length:"Length", cat_mass:"Mass", cat_temp:"Temperature", cat_fx:"Currency",
+        fx_note:"Fetching live currency rates…", refresh:"Refresh", updated:"Updated", offline:"Offline (using cached rates)",
+        calc_title:"Calculator", history:"History", clear_history:"Clear history", copied:"Copied!",
+        todo_title:"To-Do", todo_add:"Add", todo_clear_done:"Clear done", todo_clear_all:"Clear all", todo_hint:"Tasks are saved on this device.",
+        shop_title:"Shopping List", add_item:"Add", items:"Items", total:"Total", budget:"Budget", left:"Left",
+        share_list:"Share (read-only)", clear_all:"Clear all", export_csv:"Export CSV", share_readonly_note:"This is a read-only shared view.",
+        more_title:"Info & SEO", page_about:"About", page_contact:"Contact", page_privacy:"Privacy", page_terms:"Terms", page_faq:"FAQ", page_how:"How it works",
+        more_note:"We’ll generate real pages + sitemap & robots.txt in next steps.", copied_link:"Link copied!", short_copied:"Short link copied!"
+      },
+      fr:{ appName:"Daily Tools", lang:"Langue",
+        tab_convert:"Convertisseur", tab_calc:"Calculatrice", tab_todo:"À faire", tab_shop:"Courses", tab_more:"Plus",
+        convert_title:"Convertisseur", convert_category:"Catégorie", convert_btn:"Convertir", copy:"Copier",
+        cat_length:"Longueur", cat_mass:"Masse", cat_temp:"Température", cat_fx:"Devise",
+        fx_note:"Récupération des taux de change…", refresh:"Rafraîchir", updated:"Mis à jour", offline:"Hors ligne (taux en cache)",
+        calc_title:"Calculatrice", history:"Historique", clear_history:"Effacer l’historique", copied:"Copié !",
+        todo_title:"À faire", todo_add:"Ajouter", todo_clear_done:"Effacer terminées", todo_clear_all:"Tout effacer", todo_hint:"Les tâches sont enregistrées sur cet appareil.",
+        shop_title:"Liste de courses", add_item:"Ajouter", items:"Articles", total:"Total", budget:"Budget", left:"Reste",
+        share_list:"Partager (lecture seule)", clear_all:"Tout effacer", export_csv:"Exporter CSV", share_readonly_note:"Vue partagée en lecture seule.",
+        more_title:"Infos & SEO", page_about:"À propos", page_contact:"Contact", page_privacy:"Confidentialité", page_terms:"Conditions", page_faq:"FAQ", page_how:"Comment ça marche",
+        more_note:"Nous créerons de vraies pages + sitemap & robots.txt aux prochaines étapes.", copied_link:"Lien copié !", short_copied:"Lien court copié !"
+      },
+      ar:{ appName:"ديلي تولز", lang:"اللغة",
+        tab_convert:"المحوّل", tab_calc:"الآلة الحاسبة", tab_todo:"المهام", tab_shop:"التسوّق", tab_more:"المزيد",
+        convert_title:"المحوّل", convert_category:"الفئة", convert_btn:"تحويل", copy:"نسخ",
+        cat_length:"طول", cat_mass:"كتلة", cat_temp:"حرارة", cat_fx:"العملة",
+        fx_note:"جلب أسعار العملات المباشرة…", refresh:"تحديث", updated:"تم التحديث", offline:"أوفلاين (نستخدم القيم المخبأة)",
+        calc_title:"الآلة الحاسبة", history:"السجل", clear_history:"مسح السجل", copied:"تم النسخ!",
+        todo_title:"قائمة المهام", todo_add:"إضافة", todo_clear_done:"مسح المنجزة", todo_clear_all:"مسح الكل", todo_hint:"المهام محفوظة على هذا الجهاز.",
+        shop_title:"قائمة التسوّق", add_item:"إضافة", items:"العناصر", total:"الإجمالي", budget:"الميزانية", left:"المتبقي",
+        share_list:"مشاركة (قراءة فقط)", clear_all:"مسح الكل", export_csv:"تصدير CSV", share_readonly_note:"عرض مشترك للقراءة فقط.",
+        more_title:"معلومات وSEO", page_about:"من نحن", page_contact:"اتصل بنا", page_privacy:"الخصوصية", page_terms:"الشروط", page_faq:"الأسئلة الشائعة", page_how:"كيف يعمل",
+        more_note:"سننشئ صفحات حقيقية + خريطة الموقع وrobots.txt في الخطوات القادمة.", copied_link:"تم نسخ الرابط!", short_copied:"تم نسخ الرابط القصير!"
+      },
+      de:{ appName:"Daily Tools", lang:"Sprache",
+        tab_convert:"Umrechner", tab_calc:"Rechner", tab_todo:"To-Do", tab_shop:"Einkauf", tab_more:"Mehr",
+        convert_title:"Umrechner", convert_category:"Kategorie", convert_btn:"Umrechnen", copy:"Kopieren",
+        cat_length:"Länge", cat_mass:"Masse", cat_temp:"Temperatur", cat_fx:"Währung",
+        fx_note:"Abrufen von Wechselkursen…", refresh:"Aktualisieren", updated:"Aktualisiert", offline:"Offline (Cache-Kurse)",
+        calc_title:"Rechner", history:"Verlauf", clear_history:"Verlauf löschen", copied:"Kopiert!",
+        todo_title:"To-Do", todo_add:"Hinzufügen", todo_clear_done:"Erledigte löschen", todo_clear_all:"Alles löschen", todo_hint:"Aufgaben werden auf diesem Gerät gespeichert.",
+        shop_title:"Einkaufsliste", add_item:"Hinzufügen", items:"Posten", total:"Summe", budget:"Budget", left:"Übrig",
+        share_list:"Teilen (Read-only)", clear_all:"Alles löschen", export_csv:"CSV exportieren", share_readonly_note:"Schreibgeschützte geteilte Ansicht.",
+        more_title:"Info & SEO", page_about:"Über uns", page_contact:"Kontakt", page_privacy:"Datenschutz", page_terms:"AGB", page_faq:"FAQ", page_how:"So funktioniert’s",
+        more_note:"Echte Seiten + Sitemap & robots.txt kommen als Nächstes.", copied_link:"Link kopiert!", short_copied:"Kurzlink kopiert!"
+      }
+    };
+    const langSelect=$('#langSelect'); const savedLang=localStorage.getItem('dt_lang')||'en';
+    langSelect.value=savedLang; applyLang(savedLang);
+    langSelect.addEventListener('change', e=>{ const v=e.target.value; localStorage.setItem('dt_lang',v); applyLang(v); });
+    function msg(key){ const code=langSelect.value; return (t[code]&&t[code][key])||(t.en&&t.en[key])||key; }
+    function applyLang(code){
+      const d=t[code]||t.en; document.documentElement.lang=code; document.documentElement.dir=(code==='ar')?'rtl':'ltr';
+      document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.getAttribute('data-i18n'); if(d[k]) el.textContent=d[k]; });
+      document.querySelectorAll('[data-i18n-opt]').forEach(opt=>{ const k=opt.getAttribute('data-i18n-opt'); if(d[k]) opt.textContent=d[k]; });
+      document.title=d.appName||'Daily Tools';
+    }
+
+    // Converter (units + currency)
+    const units={ length:{m:1,km:1000,cm:0.01,mm:0.001,in:0.0254,ft:0.3048,yd:0.9144,mi:1609.344}, mass:{g:1,kg:1000,lb:453.59237,oz:28.349523125}, temp:{C:'C',F:'F',K:'K'} };
+    const unitLabels={ m:'m',km:'km',cm:'cm',mm:'mm',in:'in',ft:'ft',yd:'yd',mi:'mi', g:'g',kg:'kg',lb:'lb',oz:'oz', C:'°C',F:'°F',K:'K' };
+    const currencies=['USD','EUR','GBP','JPY','CNY','CAD','AUD','NZD','CHF','SEK','NOK','DKK','PLN','TRY','RUB','INR','AED','SAR','QAR','KWD','BHD','EGP','MAD','TND','DZD','ZAR','NGN','GHS','KES','TZS','UGX','XOF','XAF','BRL','MXN','ARS','CLP','COP','PEN','HKD','SGD','THB','IDR','MYR','PHP','VND','KRW','ILS'];
+    const currencyNames={USD:'US Dollar',EUR:'Euro',GBP:'British Pound',JPY:'Japanese Yen',CNY:'Chinese Yuan',CAD:'Canadian Dollar',AUD:'Australian Dollar',NZD:'New Zealand Dollar',CHF:'Swiss Franc',SEK:'Swedish Krona',NOK:'Norwegian Krone',DKK:'Danish Krone',PLN:'Polish Zloty',TRY:'Turkish Lira',RUB:'Russian Ruble',INR:'Indian Rupee',AED:'UAE Dirham',SAR:'Saudi Riyal',QAR:'Qatari Riyal',KWD:'Kuwaiti Dinar',BHD:'Bahraini Dinar',EGP:'Egyptian Pound',MAD:'Moroccan Dirham',TND:'Tunisian Dinar',DZD:'Algerian Dinar',ZAR:'South African Rand',NGN:'Nigerian Naira',GHS:'Ghanaian Cedi',KES:'Kenyan Shilling',TZS:'Tanzanian Shilling',UGX:'Ugandan Shilling',XOF:'West African CFA',XAF:'Central African CFA',BRL:'Brazilian Real',MXN:'Mexican Peso',ARS:'Argentine Peso',CLP:'Chilean Peso',COP:'Colombian Peso',PEN:'Peruvian Sol',HKD:'Hong Kong Dollar',SGD:'Singapore Dollar',THB:'Thai Baht',IDR:'Indonesian Rupiah',MYR:'Malaysian Ringgit',PHP:'Philippine Peso',VND:'Vietnamese Dong',KRW:'South Korean Won',ILS:'Israeli Shekel'};
+    const convCat=$('#convCat'), fromVal=$('#convFromVal'), fromUnit=$('#convFromUnit'), toUnit=$('#convToUnit'), resultBox=$('#convResult'), swapBtn=$('#swapUnits'), doBtn=$('#doConvert'), copyBtn=$('#copyResult'), fxNote=$('#fxNote'), fxStamp=$('#fxStamp'), refreshFx=$('#refreshFx');
+
+    function fillUnits(){
+      const cat=convCat.value; fxNote.style.display=(cat==='fx')?'block':'none'; refreshFx.style.display=(cat==='fx')?'inline-flex':'none'; fxStamp.style.display='none';
+      fromUnit.innerHTML=''; toUnit.innerHTML='';
+      let list=[]; if(cat==='length')list=Object.keys(units.length); else if(cat==='mass')list=Object.keys(units.mass); else if(cat==='temp')list=Object.keys(units.temp);
+      if(cat==='fx'){ currencies.forEach(code=>{ const label=`${code} — ${currencyNames[code]||code}`; const o1=document.createElement('option'); o1.value=code; o1.textContent=label; const o2=o1.cloneNode(true); fromUnit.appendChild(o1); toUnit.appendChild(o2); }); fromUnit.value='USD'; toUnit.value='EUR'; ensureFxRates(true); resultBox.textContent='—'; return; }
+      list.forEach(u=>{ const o1=document.createElement('option'); o1.value=u; o1.textContent=unitLabels[u]||u; const o2=o1.cloneNode(true); fromUnit.appendChild(o1); toUnit.appendChild(o2); });
+      if(list.length){ fromUnit.value=list[0]; toUnit.value=list[1]||list[0]; } resultBox.textContent='—';
+    }
+    convCat.addEventListener('change',fillUnits); fillUnits();
+    swapBtn.addEventListener('click',()=>{ const a=fromUnit.value; fromUnit.value=toUnit.value; toUnit.value=a; doConvert(); });
+    doBtn.addEventListener('click',doConvert); copyBtn.addEventListener('click',()=>{ if(resultBox.textContent&&resultBox.textContent!=='—') copy(resultBox.textContent); });
+
+    const FX_KEY='dt_fx_cache_v1'; const FX_TTL=12*60*60*1000;
+    async function ensureFxRates(show){ if(show) fxNote.style.display='block'; let c=load(FX_KEY,null); const now=Date.now(); if(!c||(now-c.ts)>FX_TTL){ c=await fetchFxRates(); if(c) save(FX_KEY,c); }
+      if(c){ fxNote.style.display='none'; fxStamp.style.display='inline'; fxStamp.textContent=`${msg('updated')}: ${humanAgo(now-c.ts)}${!navigator.onLine?` · ${msg('offline')}`:''}`; } }
+    refreshFx.addEventListener('click',async()=>{ const c=await fetchFxRates(true); if(c){ save(FX_KEY,c); fxStamp.style.display='inline'; fxStamp.textContent=`${msg('updated')}: ${humanAgo(0)}`; toast(msg('updated')); } });
+    function humanAgo(ms){ const s=Math.floor(ms/1000),m=Math.floor(s/60),h=Math.floor(m/60),d=Math.floor(h/24); if(d>0)return d+'d'; if(h>0)return h+'h'; if(m>0)return m+'m'; return 'now'; }
+
+    async function fetchFxRates(force){
+      try{
+        const r = await fetch('/api/rates?base=USD', {cache:force?'reload':'default'});
+        if(r.ok){ const j=await r.json(); if(j&&j.rates){ return {base:'USD',rates:j.rates,ts:Date.now(),src:'serverless'}; } }
+      }catch(_){}
+      const url1='https://open.er-api.com/v6/latest/USD';
+      const url2='https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd.json';
+      try{
+        const r=await fetch(url1,{cache:force?'reload':'default'}); if(r.ok){ const j=await r.json(); if(j&&j.result==='success'&&j.rates){ return {base:'USD',rates:j.rates,ts:Date.now(),src:'erapi'}; } }
+        throw 0;
+      }catch(e){
+        try{
+          const r2=await fetch(url2,{cache:force?'reload':'default'}); if(r2.ok){ const j2=await r2.json(); if(j2&&j2.usd){ const map={}; Object.entries(j2.usd).forEach(([k,v])=>map[k.toUpperCase()]=v); return {base:'USD',rates:map,ts:Date.now(),src:'jsdelivr'}; } }
+        }catch(_){}
+      }
+      return load(FX_KEY,null);
+    }
+
+    function doConvert(){ const cat=convCat.value; const v=num(fromVal.value); if(!Number.isFinite(v)){ resultBox.textContent='—'; return; } let out=null;
+      if(cat==='length'){ const m=v*units.length[fromUnit.value]; out=m/units.length[toUnit.value]; }
+      else if(cat==='mass'){ const g=v*units.mass[fromUnit.value]; out=g/units.mass[toUnit.value]; }
+      else if(cat==='temp'){ out=convertTemp(v,fromUnit.value,toUnit.value); }
+      else if(cat==='fx'){ const c=load(FX_KEY,null); if(!c||!c.rates){ resultBox.textContent='—'; ensureFxRates(true); return; } const f=fromUnit.value.toUpperCase(), t=toUnit.value.toUpperCase(); const rF=f==='USD'?1:c.rates[f], rT=t==='USD'?1:c.rates[t]; if(!rF||!rT){ resultBox.textContent='—'; return; } out=(v/rF)*rT; resultBox.textContent=fmt(out)+' '+t+' ('+(currencyNames[t]||t)+')'; if(fxStamp.style.display==='none'){ const now=Date.now(), ts=load(FX_KEY,null)?.ts||now; fxStamp.style.display='inline'; fxStamp.textContent=`${msg('updated')}: ${humanAgo(now-ts)}`; } return; }
+      resultBox.textContent=fmt(out)+' '+(unitLabels[toUnit.value]||''); }
+    function convertTemp(v,from,to){ if(from===to)return v; let c; if(from==='C')c=v; else if(from==='F')c=(v-32)*5/9; else if(from==='K')c=v-273.15; if(to==='C')return c; if(to==='F')return c*9/5+32; if(to==='K')return c+273.15; }
+
+    // Calculator + UX
+    const display=$('#calcDisplay'), histList=$('#histList'), clearHistBtn=$('#clearHist');
+    let state={cur:'0',prev:null,op:null,justEq:false}; let HISTORY=load('dt_hist',[]); renderHist();
+    $$('.calc-btn').forEach(b=>b.addEventListener('click',()=>key(b.dataset.k)));
+    display.addEventListener('click',()=>{ copy(display.textContent); });
+    document.addEventListener('keydown',e=>{
+      if($('#calc').hidden) return;
+      const k=e.key;
+      if(/^[0-9]$/.test(k)) key(k);
+      else if(k==='.'||k===',') key('.');
+      else if(k==='+'||k==='-') key(k==='+'?'+':'−');
+      else if(k==='*') key('×');
+      else if(k==='/'||k==='÷') key('÷');
+      else if(k==='%') key('%');
+      else if(k==='Enter' || k==='=') key('=');
+      else if(k==='Backspace') key('DEL');
+      else if(k==='Escape') key('AC');
+    });
+    function key(k){ if(/\d/.test(k)){ if(state.justEq){ state.cur='0'; state.justEq=false; } state.cur=(state.cur==='0')?k:state.cur+k; }
+      else if(k==='.'){ if(state.justEq){ state.cur='0'; state.justEq=false; } if(!state.cur.includes('.')) state.cur+='.'; }
+      else if(k==='+/−'){ if(state.cur.startsWith('-')) state.cur=state.cur.slice(1); else if(state.cur!=='0') state.cur='-'+state.cur; }
+      else if(['+','−','×','÷','%'].includes(k)){ applyOp(k); }
+      else if(k==='='){ compute(); }
+      else if(k==='AC'){ state={cur:'0',prev:null,op:null,justEq:false}; }
+      else if(k==='DEL'){ if(state.justEq){ state.justEq=false; } state.cur=state.cur.length>1?state.cur.slice(0,-1):'0'; }
+      render(); }
+    function applyOp(op){ if(state.op&&state.prev!==null){ const val=calc(Number(state.prev),Number(state.cur),state.op); state.prev=String(val); state.cur='0'; state.op=op; } else { state.prev=state.cur; state.cur='0'; state.op=op; } state.justEq=false; }
+    function compute(){ if(state.op&&state.prev!==null){ const a=Number(state.prev),b=Number(state.cur); const out=calc(a,b,state.op); const line=`${fmt(a)} ${state.op} ${fmt(b)} = ${fmt(out)}`; HISTORY.unshift({id:Date.now(),line}); save('dt_hist',HISTORY); renderHist(); state={cur:String(out),prev:null,op:null,justEq:true}; } }
+    function calc(a,b,op){ if(op==='+')return a+b; if(op==='−')return a-b; if(op==='×')return a*b; if(op==='÷')return b===0?NaN:a/b; if(op==='%')return a*b/100; return NaN; }
+    function render(){ display.textContent=state.cur; }
+    function renderHist(){ histList.innerHTML=''; if(!HISTORY.length){ const d=document.createElement('div'); d.className='muted'; d.textContent='—'; histList.appendChild(d); return; }
+      HISTORY.slice(0,50).forEach(h=>{ const row=document.createElement('div'); row.className='item'; row.innerHTML=`<div class="grow">${escapeHTML(h.line)}</div><button class="btn chip">↩</button>`; row.querySelector('button').addEventListener('click',()=>{ state.cur=h.line.split('=').pop().trim(); render(); }); histList.appendChild(row); }); }
+    clearHistBtn.addEventListener('click',()=>{ HISTORY=[]; save('dt_hist',HISTORY); renderHist(); });
+
+    // To-Do + filters + share
+    const $todo={input:$('#todoInput'),add:$('#addTodo'),list:$('#todoList'),clearDone:$('#clearDone'),clearAll:$('#clearAll'),filters:$('#todoFilters'),count:$('#todoCount'),banner:$('#todoBanner'),form:$('#todoForm'),share:$('#shareTodo'),shareShort:$('#shareTodoShort')};
+    let TODOS=load('dt_todos',[]); let TODO_FILTER='all'; let TODO_READONLY=false;
+
+    const qs=new URLSearchParams(location.search);
+    if(qs.has('todos')){ try{ const shared=JSON.parse(decodeURIComponent(qs.get('todos'))); if(Array.isArray(shared.tasks)){ TODOS=shared.tasks; TODO_READONLY=true; disableTodoEditing(true); } }catch(_){} }
+
+    $todo.add.addEventListener('click',addTodo);
+    $todo.input.addEventListener('keydown',e=>{ if(e.key==='Enter')addTodo(); });
+    $todo.clearDone.addEventListener('click',()=>{ if(TODO_READONLY) return; TODOS=TODOS.filter(t=>!t.done); persistTodos(); });
+    $todo.clearAll.addEventListener('click',()=>{ if(TODO_READONLY) return; TODOS=[]; persistTodos(); });
+    $todo.filters.addEventListener('click',e=>{ const b=e.target.closest('.chip-btn'); if(!b)return; $$('.chip-btn', $todo.filters).forEach(el=>el.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); TODO_FILTER=b.dataset.fil; renderTodos(); });
+
+    $todo.share.addEventListener('click',async()=>{ const link=await buildTodoShareLink(false); copy(link).then(()=>toast(msg('copied_link'))); });
+    $todo.shareShort.addEventListener('click',async()=>{ const link=await buildTodoShareLink(true); copy(link).then(()=>toast(msg('short_copied'))); });
+
+    function addTodo(){ if(TODO_READONLY) return; const text=($todo.input.value||'').trim(); if(!text)return; TODOS.unshift({id:Date.now(),text,done:false}); $todo.input.value=''; persistTodos(); }
+    function persistTodos(){ if(TODO_READONLY){ renderTodos(); return; } save('dt_todos',TODOS); renderTodos(); }
+    function renderTodos(){ $todo.list.innerHTML=''; const filtered=TODOS.filter(t=>TODO_FILTER==='all'||(TODO_FILTER==='active'?!t.done:t.done)); $todo.count.textContent=`${filtered.length}/${TODOS.length}`; if(!filtered.length){ const e=document.createElement('div'); e.className='muted'; e.textContent=({en:'No tasks to show.',fr:'Aucune tâche à afficher.',ar:'لا مهام للعرض.',de:'Keine Aufgaben.'})[langSelect.value]||'No tasks.'; $todo.list.appendChild(e); return; }
+      filtered.forEach(todo=>{ const li=document.createElement('div'); li.className='item'+(todo.done?' done':''); li.innerHTML=`<input type="checkbox" ${todo.done?'checked':''} aria-label="done" ${TODO_READONLY?'disabled':''}/><div class="grow">${escapeHTML(todo.text)}</div>${TODO_READONLY?'':`<button class="btn chip">✕</button>`}`; const chk=li.querySelector('input[type="checkbox"]'); chk&&chk.addEventListener('change',()=>{ if(TODO_READONLY) return; todo.done=!todo.done; persistTodos(); }); const del=li.querySelector('button'); del&&del.addEventListener('click',()=>{ if(TODO_READONLY) return; TODOS=TODOS.filter(t=>t.id!==todo.id); persistTodos(); }); $todo.list.appendChild(li); }); }
+    function disableTodoEditing(dis){ $todo.form.style.display=dis?'none':'flex'; $todo.banner.style.display=dis?'flex':'none'; [$todo.add,$todo.clearAll,$todo.clearDone].forEach(b=>b.disabled=!!dis); TODO_READONLY=!!dis; }
+    renderTodos();
+
+    async function buildTodoShareLink(short){ const base=location.origin+location.pathname; const payload={tasks:TODOS,v:1};
+      if(short){
+        try{ const r=await fetch('/api/shorten',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)}); if(r.ok){ const j=await r.json(); if(j&&j.code){ return base+'#/todos/'+j.code; } } }catch(_){}
+        if('CompressionStream' in window){ const code=await encodeShort(payload); return base+'#/todos/'+code; }
+      }
+      return base+'?todos='+encodeURIComponent(JSON.stringify(payload));
+    }
+
+    // Shopping + share
+    const shop={ listEl:$('#shopList'), name:$('#itemName'), qty:$('#itemQty'), price:$('#itemPrice'), add:$('#addItem'), clear:$('#clearShop'), count:$('#sCount'), total:$('#sTotal'), left:$('#sLeft'), budget:$('#budgetInput'), shareBtn:$('#shareBtn'), shareShortBtn:$('#shareShortBtn'), exportBtn:$('#exportCSV'), form:$('#shopForm'), banner:$('#shareBanner') };
+    let SHOP=load('dt_shop',[]); let BUDGET=load('dt_budget',0);
+    if(qs.has('list')){ try{ const shared=JSON.parse(decodeURIComponent(qs.get('list'))); SHOP=Array.isArray(shared.items)?shared.items:[]; BUDGET=Number(shared.budget)||0; shop.form.style.display='none'; shop.banner.style.display='flex'; shop.budget.value=fmt(BUDGET); disableShoppingEditing(true); }catch(e){} } else { shop.budget.value=BUDGET?String(BUDGET):''; }
+    shop.add.addEventListener('click',()=>addItem(shop.name.value,num(shop.qty.value||'1'),num(shop.price.value||'0')));
+    [shop.name,shop.qty,shop.price].forEach(i=>i.addEventListener('keydown',e=>{ if(e.key==='Enter')shop.add.click(); }));
+    shop.clear.addEventListener('click',()=>{ SHOP=[]; save('dt_shop',SHOP); renderShop(); });
+    shop.budget.addEventListener('input',()=>{ BUDGET=num(shop.budget.value||'0'); save('dt_budget',BUDGET); updateSummary(); });
+    shop.shareBtn.addEventListener('click',async()=>{ const link=await buildShareLink(false); copy(link).then(()=>toast(msg('copied_link'))); });
+    shop.shareShortBtn.addEventListener('click',async()=>{ const link=await buildShareLink(true); copy(link).then(()=>toast(msg('short_copied'))); });
+    shop.exportBtn.addEventListener('click',()=>exportCSV());
+    function addItem(name,qty,price){ name=(name||'').trim(); if(!name)return; qty=Number.isFinite(qty)&&qty>0?qty:1; price=Number.isFinite(price)&&price>=0?price:0; SHOP.unshift({id:Date.now(),name,qty,price}); shop.name.value=''; shop.qty.value=''; shop.price.value=''; save('dt_shop',SHOP); renderShop(); }
+    function renderShop(){ shop.listEl.innerHTML=''; if(!SHOP.length){ const e=document.createElement('div'); e.className='muted'; e.textContent='—'; shop.listEl.appendChild(e); } SHOP.forEach(it=>{ const row=document.createElement('div'); row.className='item'; const tot=it.qty*it.price; row.innerHTML=`<div class="grow"><strong>${escapeHTML(it.name)}</strong><br><span class="muted">${fmt(it.qty)} × ${fmt(it.price)}</span></div><div class="chip">${fmt(tot)}</div><button class="btn chip" data-act="del">✕</button>`; row.querySelector('[data-act="del"]').addEventListener('click',()=>{ SHOP=SHOP.filter(x=>x.id!==it.id); save('dt_shop',SHOP); renderShop(); }); shop.listEl.appendChild(row); }); updateSummary(); }
+    function updateSummary(){ const count=SHOP.length; const total=SHOP.reduce((s,i)=>s+(Number(i.qty)||0)*(Number(i.price)||0),0); shop.count.textContent=String(count); shop.total.textContent=fmt(total); const left=(Number(BUDGET)||0)-total; shop.left.textContent=fmt(left); shop.left.classList.toggle('ok',left>=0); shop.left.classList.toggle('warn',left<0); }
+    function disableShoppingEditing(d){ [shop.add,shop.clear,shop.name,shop.qty,shop.price,shop.budget].forEach(el=>el.disabled=!!d); }
+    renderShop();
+    function exportCSV(){ const rows=[['Name','Qty','Price','Total']].concat(SHOP.map(i=>[i.name,i.qty,i.price,(i.qty*i.price)])); const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='shopping.csv'; a.click(); URL.revokeObjectURL(url); }
+
+    async function buildShareLink(short){ const payload={items:SHOP,budget:BUDGET,v:1}; const base=location.origin+location.pathname;
+      if(short){
+        try{
+          const r=await fetch('/api/shorten',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+          if(r.ok){ const j=await r.json(); if(j&&j.code){ return base+'#/share/'+j.code; } }
+        }catch(_){}
+        if('CompressionStream' in window){ const code=await encodeShort(payload); return base+'#/share/'+code; }
+      }
+      return base+'?list='+encodeURIComponent(JSON.stringify(payload));
+    }
+
+    // shared codec helpers
+    async function encodeShort(obj){ const str=JSON.stringify(obj); const bytes=new TextEncoder().encode(str); const out=await compress(bytes); return toBase64Url(out); }
+    async function decodeShort(code){ const bytes=fromBase64Url(code); const text=await decompress(bytes); return JSON.parse(text); }
+    async function compress(bytes){ const cs=new CompressionStream('deflate'); const w=cs.writable.getWriter(); w.write(bytes); w.close(); const buf=await new Response(cs.readable).arrayBuffer(); return new Uint8Array(buf); }
+    async function decompress(bytes){ const ds=new DecompressionStream('deflate'); const w=ds.writable.getWriter(); w.write(bytes); w.close(); const buf=await new Response(ds.readable).arrayBuffer(); return new TextDecoder().decode(buf); }
+    function toBase64Url(uint8){ let s=''; for(const b of uint8) s+=String.fromCharCode(b); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+    function fromBase64Url(s){ const b64=s.replace(/-/g,'+').replace(/_/g,'/'); const pad='='.repeat((4-(b64.length%4))%4); const bin=atob(b64+pad); const out=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) out[i]=bin.charCodeAt(i); return out; }
+
+    // Storage helpers
+    function load(key,fallback){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):fallback; }catch(e){ return fallback; } }
+    function save(key,val){ localStorage.setItem(key,JSON.stringify(val)); }
+    function escapeHTML(s){ return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    // Tiny SPA Router
+    const PAGES={
+      '/about':{title:'About — Daily Tools',desc:'About Daily Tools.',html:'<h2>About</h2><p>Daily Tools is a lightweight, iOS-style toolbox for everyday tasks.</p>'},
+      '/contact':{title:'Contact — Daily Tools',desc:'Contact Daily Tools.',html:'<h2>Contact</h2><p>Email: <a href="mailto:hello@example.com">hello@example.com</a></p>'},
+      '/privacy':{title:'Privacy — Daily Tools',desc:'Privacy policy.',html:'<h2>Privacy</h2><p>We store data locally on your device only (LocalStorage). No accounts, no tracking.</p>'},
+      '/terms':{title:'Terms — Daily Tools',desc:'Terms of use.',html:'<h2>Terms</h2><p>Use at your discretion. No warranties.</p>'},
+      '/faq':{title:'FAQ — Daily Tools',desc:'Frequently asked questions.',html:'<h2>FAQ</h2><p><strong>Q:</strong> Does it work offline?<br><strong>A:</strong> Yes, via PWA caching.</p>'},
+      '/how-it-works':{title:'How it works — Daily Tools',desc:'How to use Daily Tools.',html:'<h2>How it works</h2><p>Pick a tool from the tabs and start using it. Add it to your home screen for faster access.</p>'},
+    };
+    const pageCard=$('#page');
+    window.addEventListener('hashchange',handleRoute); handleRoute();
+    function handleRoute(){
+      const h=location.hash.replace(/^#/, '')||'';
+      if(h.startsWith('/share/')){ const code=h.split('/share/')[1]; openShared(code); return; }
+      if(h.startsWith('/todos/')){ const code=h.split('/todos/')[1]; openTodoShared(code); return; }
+      if(h.startsWith('/')){
+        Object.values(panels).forEach(el=>el.hidden=true); pageCard.hidden=false;
+        const page=PAGES[h]||{title:'Daily Tools',desc:'',html:'<h2>Not found</h2>'};
+        pageCard.innerHTML=`<div class="row" style="margin-bottom:10px;"><button class="btn" onclick="history.back()">&larr; Back</button></div>${page.html}`;
+        document.title=page.title; setMetaDescription(page.desc);
+      }else{
+        pageCard.hidden=true; showTab('convert'); setMetaDescription("Daily Tools — converters (units + currency), calculator with history, to-do and shopping list. Mobile-first, iOS-style.");
+      }
+    }
+    async function openShared(code){
+      try{
+        const data=await decodeShort(code);
+        SHOP=data.items||[]; BUDGET=Number(data.budget)||0; save('dt_budget',BUDGET); renderShop();
+        shop.budget.value=fmt(BUDGET); shop.form.style.display='none'; shop.banner.style.display='flex'; disableShoppingEditing(true);
+        showTab('shop'); pageCard.hidden=true; document.title='Shared list — Daily Tools';
+      }catch(e){
+        try{ const r=await fetch('/api/shorten/'+code); if(r.ok){ const data=await r.json(); SHOP=data.items||[]; BUDGET=Number(data.budget)||0; renderShop(); showTab('shop'); pageCard.hidden=true; return; } }catch(_){}
+        pageCard.hidden=false; Object.values(panels).forEach(el=>el.hidden=true);
+        pageCard.innerHTML='<h2>Invalid or expired share</h2><p>Could not open the shared list.</p>';
+      }
+    }
+    async function openTodoShared(code){
+      try{
+        const data=await decodeShort(code);
+        TODOS=Array.isArray(data.tasks)?data.tasks:[]; disableTodoEditing(true); renderTodos(); showTab('todo'); pageCard.hidden=true; document.title='Shared tasks — Daily Tools';
+      }catch(e){
+        try{ const r=await fetch('/api/shorten/'+code); if(r.ok){ const data=await r.json(); TODOS=Array.isArray(data.tasks)?data.tasks:[]; disableTodoEditing(true); renderTodos(); showTab('todo'); pageCard.hidden=true; return; } }catch(_){}
+        pageCard.hidden=false; Object.values(panels).forEach(el=>el.hidden=true);
+        pageCard.innerHTML='<h2>Invalid or expired share</h2><p>Could not open the shared tasks.</p>';
+      }
+    }
+    function setMetaDescription(text){ let m=document.querySelector('meta[name="description"]'); if(!m){ m=document.createElement('meta'); m.setAttribute('name','description'); document.head.appendChild(m); } m.setAttribute('content',text||''); }
+
+    // PWA (no + button; install via browser menu). Still generates manifest & SW.
+    makeAndAttachManifest(); registerServiceWorker();
+
+    function makeAndAttachManifest(){ const icon192=makeIcon(192),icon512=makeIcon(512); const linkApple=document.createElement('link'); linkApple.rel='apple-touch-icon'; linkApple.href=icon192; document.head.appendChild(linkApple);
+      const manifest={name:"Daily Tools",short_name:"Daily Tools",start_url:"./",scope:"./",display:"standalone",background_color:"#ffffff",theme_color:"#ffffff",icons:[{src:icon192,sizes:"192x192",type:"image/png"},{src:icon512,sizes:"512x512",type:"image/png"}]}; const blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}); const url=URL.createObjectURL(blob); const link=document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link); }
+    function makeIcon(size){ const c=document.createElement('canvas'); c.width=c.height=size; const ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size); const r=size*0.18; roundedRect(ctx,size*0.12,size*0.12,size*0.76,size*0.76,r); const g=ctx.createLinearGradient(0,0,0,size); g.addColorStop(0,'#D4AF37'); g.addColorStop(1,'#C79E2E'); ctx.fillStyle=g; ctx.fill(); ctx.fillStyle='#000'; ctx.font=`${Math.floor(size*0.42)}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('DT',size/2,size/2+size*0.02); return c.toDataURL('image/png'); }
+    function roundedRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+    function registerServiceWorker(){ if(!('serviceWorker'in navigator))return; const sw=`const CACHE='dt-cache-v3';const CORE=['./','./index.html'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))).then(()=>self.clients.claim())});self.addEventListener('fetch',e=>{const req=e.request;if(req.method!=='GET'){return}e.respondWith(caches.match(req).then(res=>res||fetch(req).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(req,copy));return r}).catch(()=>caches.match('./'))))});`; const blob=new Blob([sw],{type:'text/javascript'}); const url=URL.createObjectURL(blob); navigator.serviceWorker.register(url).catch(()=>{}); }
+  </script>
+</body>
+</html>
